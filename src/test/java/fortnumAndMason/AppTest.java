@@ -1,5 +1,6 @@
 package fortnumAndMason;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
@@ -15,6 +16,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.logging.LoggingHandler;
 import org.openqa.selenium.support.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -38,7 +40,6 @@ public class AppTest {
     
     @Test
     public void signIn() {
-        // try {
         chromeDriver.get("https://www.fortnumandmason.com/login");
         login = new LoginPage(chromeDriver);
         WebDriverWait wait = new WebDriverWait(chromeDriver, Duration.ofSeconds(10));
@@ -52,9 +53,7 @@ public class AppTest {
         wait.until(login.isPassWordReady());
         login.setPassWord();
         login.pressSignInButton();
+        wait.until(login.isAlertActive());
         assertTrue(login.isLogedIn(chromeDriver));
-        // } catch (Exception e) {
-        //     System.out.println("[Error] :: " + e);
-        // }
     }
 }

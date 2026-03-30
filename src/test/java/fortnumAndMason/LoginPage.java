@@ -56,6 +56,12 @@ public class LoginPage {
         );
     }
 
+    public ExpectedCondition<WebElement> isAlertActive() {
+        return ExpectedConditions.visibilityOfElementLocated(
+            By.cssSelector("div[role='alert']")
+        );
+    }
+
     public ExpectedCondition<WebElement> isCookiePopUpActiv() {
         return ExpectedConditions.visibilityOfElementLocated(
             By.id("uc-center-container")
@@ -83,8 +89,9 @@ public class LoginPage {
     }
 
     public boolean isLogedIn(WebDriver driver) {
-        String text = driver.switchTo().alert().getText();
-        System.out.println("=> " + text);
-        return text.equals("Hello");
+        WebElement alertDivText = driver.findElement(
+            By.xpath("//div[@role='alert']//div[text()='You are logged in!']")
+        );
+        return alertDivText.isDisplayed();
     }
 }
