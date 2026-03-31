@@ -1,22 +1,15 @@
 package fortnumAndMason;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.time.Duration;
 
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
-import fortnumAndMason.LoginPage;
-
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.*;
-import org.openqa.selenium.logging.LoggingHandler;
-import org.openqa.selenium.support.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -42,9 +35,8 @@ public class AppTest {
     public void signIn() {
         chromeDriver.get("https://www.fortnumandmason.com/login");
         login = new LoginPage(chromeDriver);
+        manageCookies();
         WebDriverWait wait = new WebDriverWait(chromeDriver, Duration.ofSeconds(10));
-        // wait.until(login.isCookiePopUpActiv());
-        // login.rejectCookies();
         wait.until(login.isPopUPActive());
         login.closePopUp();
         wait.until(login.isPageReady());
@@ -55,5 +47,22 @@ public class AppTest {
         login.pressSignInButton();
         wait.until(login.isAlertActive());
         assertTrue(login.isLogedIn(chromeDriver));
+    }
+
+    void manageCookies() {
+        Thread thrd = new Thread(() -> {
+            try {
+                new FluentWait<>(chromeDriver)
+                    .withTimeout(null)
+                    .pollingEvery(Duration.ofMillis(500))
+                    .ignoring(Exception.class)
+                    .until(login.isCookiePopUpActiv());
+                login.rejectCookies();
+            } catch (Exception e) {
+                System.out.println("[Error] :: " + e);
+            }
+        });
+        thrd.setDaemon(true);
+        thrd.start();
     }
 }
