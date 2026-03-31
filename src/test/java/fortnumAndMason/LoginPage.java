@@ -62,9 +62,9 @@ public class LoginPage {
         );
     }
 
-    public ExpectedCondition<WebElement> isCookiePopUpActiv() {
+    public ExpectedCondition<WebElement> isCookiePopUpActive() {
         return ExpectedConditions.visibilityOfElementLocated(
-            By.id("uc-center-container")
+            By.cssSelector("button[data-testid='uc-deny-all-button']")
         );
     }
 
@@ -84,8 +84,9 @@ public class LoginPage {
         closePopUpButton.click();
     }
 
-    public void rejectCookies() {
+    public boolean rejectCookies() {
         rejectAllCookies.click();
+        return false;
     }
 
     public boolean isLogedIn(WebDriver driver) {
