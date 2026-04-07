@@ -1,14 +1,19 @@
 package fortnumAndMason;
 
 import java.time.Duration;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -52,12 +57,21 @@ public class AppTest {
     void manageCookies() {
         Thread thrd = new Thread(() -> {
             try {
-                new FluentWait<>(chromeDriver)
-                    .withTimeout(null)
-                    .pollingEvery(Duration.ofMillis(500))
-                    .ignoring(Exception.class)
-                    .until(login.isCookiePopUpActiv());
-                login.rejectCookies();
+                WebElement shadowHost = new FluentWait<>(chromeDriver)
+                .withTimeout(Duration.ofSeconds(20))
+                .pollingEvery(Duration.ofMillis(500))
+                .ignoring(NoSuchElementException.class)
+                .until(ExpectedConditions.presenceOfElementLocated(
+                    By.id("usercentrics-root")
+                ));
+                try {
+                    SearchContext shadowRoot = shadowHost.getShadowRoot();
+                    WebElement rejectCookies = shadowRoot.findElement(
+                        By.cssSelector("button[data-testid='uc-deny-all-button']")
+                    );
+                    rejectCookies.click();
+                }
+                catch (NoSuchElementException e) {}
             } catch (Exception e) {
                 System.out.println("[Error] :: " + e);
             }
