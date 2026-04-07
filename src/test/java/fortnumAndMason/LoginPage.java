@@ -28,9 +28,6 @@ public class LoginPage {
     @FindBy(css="button[aria-label='Close']")
     private WebElement closePopUpButton;
     
-    @FindBy(css="button[data-testid='uc-deny-all-button']")
-    private WebElement rejectAllCookies;
-    
     @FindBy(css="button[aria-label='Sign-in'][type='submit']")
     private WebElement signInButton;
     /*********************************************************/
@@ -69,12 +66,6 @@ public class LoginPage {
         );
     }
     
-    public ExpectedCondition<WebElement> isCookiePopUpActive() {
-        return ExpectedConditions.visibilityOfElementLocated(
-            By.cssSelector("button[data-testid='uc-deny-all-button']")
-        );
-    }
-    
     public ExpectedCondition<WebElement> isPageReady() {
         return ExpectedConditions.elementToBeClickable(
             By.cssSelector("button[aria-label='Login'][type='submit']")
@@ -99,11 +90,6 @@ public class LoginPage {
     /********************[ACTIONS]********************/
     public void closePopUp() {
         closePopUpButton.click();
-    }
-    
-    public boolean rejectCookies() {
-        rejectAllCookies.click();
-        return false;
     }
     
     public void pressLoginButton() {
